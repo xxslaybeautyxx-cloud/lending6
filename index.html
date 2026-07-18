@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Данил — Консультант по банковским продуктам</title>
+<meta name="description" content="Персональный консультант по банковским продуктам. Подбор и оформление дебетовых карт, регистрация ИП, открытие расчётного счёта. Полное сопровождение.">
+<meta property="og:title" content="Данил — Консультант по банковским продуктам">
+<meta property="og:description" content="Помогаю подобрать и оформить банковские продукты, консультирую по финансовым решениям и сопровождаю клиентов на всех этапах.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect width='1200' height='630' fill='%230A0A0B'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FF4B3A'/%3E%3Cstop offset='1' stop-color='%23EF3124'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='48' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='52' font-weight='700' fill='white' text-anchor='middle'%3E%D0%94%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0A0B;
+  --bg-2:#111114;
+  --surface:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.08);
+  --text:#F5F5F7;
+  --text-dim:rgba(245,245,247,0.6);
+  --accent:#EF3124;
+  --glow-a:#FF4B3A;
+  --glow-b:#FF8A65;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  cursor:none;
+}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+img{max-width:100%}
+::selection{background:rgba(239,49,36,0.3);color:#fff}
+
+/* ============ AURORA + NOISE BACKGROUND ============ */
+.bg-layer{position:fixed;inset:0;z-index:-2;background:radial-gradient(120% 120% at 50% 0%,var(--bg-2),var(--bg))}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.aurora span{position:absolute;border-radius:50%;filter:blur(120px);opacity:.5;will-change:transform}
+.aurora .a1{width:600px;height:600px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(239,49,36,0.35),transparent 70%);animation:float1 22s var(--ease) infinite alternate}
+.aurora .a2{width:500px;height:500px;top:30%;right:-180px;background:radial-gradient(circle,rgba(255,138,101,0.25),transparent 70%);animation:float2 26s var(--ease) infinite alternate}
+.aurora .a3{width:550px;height:550px;bottom:-200px;left:35%;background:radial-gradient(circle,rgba(255,75,58,0.20),transparent 70%);animation:float3 30s var(--ease) infinite alternate}
+@keyframes float1{to{transform:translate(120px,100px) scale(1.15)}}
+@keyframes float2{to{transform:translate(-100px,80px) scale(1.1)}}
+@keyframes float3{to{transform:translate(80px,-120px) scale(1.2)}}
+.noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ============ CUSTOM CURSOR ============ */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-dot{width:6px;height:6px;background:#fff;transform:translate(-50%,-50%)}
+.cursor-ring{width:34px;height:34px;border:1px solid rgba(255,255,255,0.6);transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),background .25s}
+.cursor-ring.hover{width:54px;height:54px;background:rgba(255,255,255,0.08)}
+
+/* ============ SCROLL PROGRESS ============ */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--glow-a),var(--accent));z-index:1000;box-shadow:0 0 10px rgba(239,49,36,0.6)}
+
+/* ============ LOADER ============ */
+.loader{position:fixed;inset:0;background:var(--bg);z-index:2000;display:flex;align-items:center;justify-content:center;transition:opacity .6s var(--ease),visibility .6s}
+.loader.hide{opacity:0;visibility:hidden}
+.loader .mono{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px;color:#fff;background:linear-gradient(135deg,var(--glow-a),var(--accent));animation:pulseLogo 1.2s var(--ease) infinite}
+@keyframes pulseLogo{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(239,49,36,0.5)}50%{transform:scale(1.06);box-shadow:0 0 0 18px rgba(239,49,36,0)}}
+
+/* ============ CONTAINER ============ */
+.container{width:100%;max-width:1240px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* ============ NAV ============ */
+header.nav{position:fixed;top:0;left:0;right:0;z-index:900;transition:all .4s var(--ease)}
+header.nav .inner{display:flex;align-items:center;justify-content:space-between;height:72px;transition:all .4s var(--ease);border-bottom:1px solid transparent}
+header.nav.scrolled{backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);background:rgba(10,10,11,0.6)}
+header.nav.scrolled .inner{border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:-.02em}
+.logo .mark{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--glow-a),var(--accent))}
+.nav-links{display:flex;gap:36px}
+.nav-links a{font-size:15px;color:var(--text-dim);transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--accent);transition:width .3s var(--ease)}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--border);border-radius:100px;font-size:14px;font-weight:500;background:var(--surface);backdrop-filter:blur(10px);transition:all .3s var(--ease)}
+.nav-cta:hover{border-color:rgba(239,49,36,0.5);background:rgba(239,49,36,0.08)}
+.nav-cta svg{width:16px;height:16px}
+.burger{display:none;flex-direction:column;gap:5px;width:44px;height:44px;align-items:center;justify-content:center;background:none;border:none;cursor:none}
+.burger span{width:22px;height:2px;background:var(--text);transition:all .3s var(--ease)}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile menu */
+.mobile-menu{position:fixed;inset:0;z-index:850;background:rgba(10,10,11,0.85);backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s}
+.mobile-menu.open{opacity:1;visibility:visible}
+.mobile-menu a{font-size:26px;font-weight:600;letter-spacing:-.02em}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 30px;border-radius:100px;font-weight:600;font-size:16px;transition:all .4s var(--ease);cursor:none;border:1px solid transparent;position:relative;will-change:transform}
+.btn-primary{background:var(--text);color:#0A0A0B}
+.btn-primary:hover{background:transparent;color:var(--text);border-color:var(--text);box-shadow:0 0 40px rgba(239,49,36,0.35)}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.06)}
+.btn-accent{background:linear-gradient(135deg,var(--glow-a),var(--accent));color:#fff}
+.btn svg{width:18px;height:18px;transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+
+/* ============ LABELS ============ */
+.label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim)}
+.label .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.label .dot.green{background:#30D158;box-shadow:0 0 8px #30D158;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ============ SECTION ============ */
+section{padding:120px 0;position:relative}
+.sec-head{max-width:720px;margin-bottom:64px}
+.sec-head h2{font-size:clamp(32px,4.5vw,54px);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin-top:18px}
+.grad-text{background:linear-gradient(120deg,var(--glow-a),var(--glow-b));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ============ HERO ============ */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:100px;padding-bottom:60px;position:relative}
+#particles{position:absolute;inset:0;z-index:0}
+.hero .container{max-width:960px}
+.hero h1{font-size:clamp(44px,7vw,92px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:26px 0}
+.hero p.sub{font-size:clamp(16px,2vw,19px);color:var(--text-dim);max-width:640px;margin:0 auto 40px}
+.hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:80px}
+.hero-stats{display:flex;justify-content:center;gap:56px;flex-wrap:wrap}
+.hero-stats .stat .num{font-size:clamp(28px,3.5vw,40px);font-weight:700;letter-spacing:-.02em}
+.hero-stats .stat .cap{font-size:13px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.scroll-ind{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:.15em}
+.scroll-ind .arrow{width:22px;height:34px;border:1px solid var(--border);border-radius:100px;position:relative}
+.scroll-ind .arrow::before{content:'';position:absolute;top:6px;left:50%;width:3px;height:6px;background:var(--accent);border-radius:2px;transform:translateX(-50%);animation:scrolldown 1.6s infinite}
+@keyframes scrolldown{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}80%{opacity:0;transform:translate(-50%,12px)}100%{opacity:0}}
+
+/* ============ CARD BASE (glass + gradient hover border) ============ */
+.glass{background:var(--surface);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:22px;position:relative;transition:transform .5s var(--ease),border-color .5s var(--ease)}
+.glass::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(255,75,58,0.6),transparent 40%,transparent 60%,rgba(255,138,101,0.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .5s var(--ease);pointer-events:none}
+.glass:hover::before{opacity:1}
+
+/* ============ ABOUT ============ */
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.about-text p{color:var(--text-dim);margin-top:20px;font-size:17px}
+.about-text .lead{color:var(--text);font-size:20px;font-weight:500;margin-top:0}
+.vcard{padding:36px;text-align:center}
+.vcard .avatar{width:120px;height:120px;border-radius:50%;margin:0 auto 22px;background:linear-gradient(135deg,rgba(255,75,58,0.25),rgba(255,138,101,0.15));display:flex;align-items:center;justify-content:center;border:1px solid var(--border);position:relative}
+.vcard .avatar span{font-size:44px;font-weight:700;background:linear-gradient(135deg,var(--glow-a),var(--glow-b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.vcard h3{font-size:24px;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;justify-content:center}
+.verify{width:20px;height:20px;color:var(--glow-b)}
+.vcard .role{color:var(--text-dim);font-size:15px;margin-top:6px}
+.vcard .divider{height:1px;background:var(--border);margin:24px 0}
+.vcard .mini{display:flex;justify-content:space-around}
+.vcard .mini div .n{font-weight:700;font-size:22px}
+.vcard .mini div .l{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+
+/* ============ SERVICES ============ */
+.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.service{padding:36px;overflow:hidden}
+.service .badge-top{position:absolute;top:22px;right:22px}
+.badge-live{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;padding:6px 12px;border-radius:100px;background:rgba(48,209,88,0.1);border:1px solid rgba(48,209,88,0.3);color:#30D158}
+.badge-live .dot{width:6px;height:6px;border-radius:50%;background:#30D158;animation:blink 2s infinite}
+.service .icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 30%,rgba(255,75,58,0.25),rgba(239,49,36,0.08));border:1px solid var(--border);margin-bottom:24px}
+.service .icon svg{width:26px;height:26px;color:var(--glow-b)}
+.service h3{font-size:23px;font-weight:600;letter-spacing:-.02em;margin-bottom:14px}
+.pill{display:inline-flex;align-items:center;padding:7px 16px;border-radius:100px;font-size:14px;font-weight:600;position:relative;color:var(--text);margin-bottom:20px;background:rgba(255,255,255,0.04)}
+.pill::before{content:'';position:absolute;inset:0;border-radius:100px;padding:1px;background:linear-gradient(120deg,var(--glow-a),var(--glow-b));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.service ul li{display:flex;align-items:flex-start;gap:10px;color:var(--text-dim);font-size:15px;margin-bottom:10px}
+.check{flex-shrink:0;width:18px;height:18px;margin-top:2px;color:var(--glow-b)}
+.service .arrow-go{position:absolute;bottom:36px;right:36px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(8px);transition:all .4s var(--ease)}
+.service:hover{transform:translateY(-6px);box-shadow:0 20px 60px -20px rgba(239,49,36,0.35)}
+.service:hover .arrow-go{opacity:1;transform:translateY(0)}
+.service.wide{grid-column:1 / -1}
+.service p.note{color:var(--text-dim);font-size:15px;max-width:640px}
+
+/* ============ ADVANTAGES (BENTO) ============ */
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.bento .cell{padding:30px;display:flex;flex-direction:column;gap:14px}
+.bento .cell.span2{grid-column:span 2}
+.bento .cell .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 30%,rgba(255,75,58,0.2),rgba(239,49,36,0.06));border:1px solid var(--border)}
+.bento .cell .ic svg{width:24px;height:24px;color:var(--glow-b)}
+.bento .cell h4{font-size:19px;font-weight:600;letter-spacing:-.02em}
+.bento .cell p{font-size:14px;color:var(--text-dim)}
+.bento .cell:hover{transform:translateY(-5px)}
+
+/* ============ FAQ ============ */
+.faq{max-width:800px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:inherit;font-size:19px;font-weight:500;text-align:left;padding:26px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;cursor:none;letter-spacing:-.01em}
+.faq-icon{flex-shrink:0;width:24px;height:24px;position:relative}
+.faq-icon::before,.faq-icon::after{content:'';position:absolute;background:var(--accent);border-radius:2px;transition:transform .4s var(--ease)}
+.faq-icon::before{top:50%;left:0;width:100%;height:2px;transform:translateY(-50%)}
+.faq-icon::after{left:50%;top:0;height:100%;width:2px;transform:translateX(-50%)}
+.faq-item.open .faq-icon::after{transform:translateX(-50%) rotate(90deg);opacity:0}
+.faq-item.open .faq-icon::before{transform:translateY(-50%) rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
+.faq-a p{color:var(--text-dim);padding-bottom:26px;font-size:16px;max-width:680px}
+
+/* ============ FINAL CTA ============ */
+.final{padding:120px 0}
+.final-card{min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 32px;overflow:hidden;border-radius:32px}
+.final-card::after{content:'';position:absolute;width:700px;height:700px;top:-30%;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(239,49,36,0.25),transparent 65%);filter:blur(40px);z-index:-1;animation:pulseGlow 5s var(--ease) infinite}
+@keyframes pulseGlow{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+.final-card h2{font-size:clamp(40px,6vw,76px);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.final-card p{color:var(--text-dim);font-size:19px;max-width:520px;margin:22px 0 40px}
+.final-card .btn-big{padding:22px 44px;font-size:19px}
+.final-card .btn-accent.pulse:hover{animation:btnPulse 1.2s infinite}
+@keyframes btnPulse{0%{box-shadow:0 0 0 0 rgba(239,49,36,0.5)}70%{box-shadow:0 0 0 24px rgba(239,49,36,0)}100%{box-shadow:0 0 0 0 rgba(239,49,36,0)}}
+.final-card .fine{font-size:13px;color:var(--text-dim);margin-top:26px;letter-spacing:.02em}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--border);padding:36px 0}
+footer .inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+footer .cr{font-size:14px;color:var(--text-dim)}
+footer a.tg{font-size:14px;color:var(--text-dim);transition:color .3s;display:inline-flex;align-items:center;gap:8px}
+footer a.tg:hover{color:var(--text)}
+
+/* ============ COPY / TOAST ============ */
+.copyable{cursor:none;border-bottom:1px dashed rgba(255,255,255,0.3);transition:color .3s}
+.copyable:hover{color:var(--glow-b)}
+.toast{position:fixed;bottom:32px;left:50%;transform:translate(-50%,120px);background:rgba(20,20,22,0.9);backdrop-filter:blur(20px);border:1px solid var(--border);padding:14px 24px;border-radius:100px;font-size:14px;z-index:1500;display:flex;align-items:center;gap:10px;opacity:0;transition:all .5s var(--ease)}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast svg{width:18px;height:18px;color:#30D158}
+
+/* ============ TG PREVIEW ============ */
+.tg-wrap{position:relative;display:inline-flex}
+.tg-preview{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(8px);width:240px;padding:16px;opacity:0;visibility:hidden;transition:all .35s var(--ease);z-index:800}
+.tg-wrap:hover .tg-preview{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.tg-preview .row{display:flex;align-items:center;gap:12px}
+.tg-preview .pfp{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2AABEE,#229ED9);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tg-preview .pfp svg{width:22px;height:22px;color:#fff}
+.tg-preview .nm{font-size:15px;font-weight:600}
+.tg-preview .un{font-size:13px;color:var(--text-dim)}
+
+/* ============ REVEAL ANIM ============ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1024px){
+  section{padding:90px 0}
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .bento .cell.span2{grid-column:span 2}
+}
+@media(max-width:768px){
+  body{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+  .btn,.faq-q,.burger,.nav-cta,.copyable{cursor:pointer}
+  .nav-links,.nav-cta{display:none}
+  .burger{display:flex}
+  .container{padding:0 20px}
+  .services-grid{grid-template-columns:1fr}
+  .hero-stats{gap:32px}
+  .hero-cta{flex-direction:column;width:100%}
+  .hero-cta .btn{width:100%;justify-content:center}
+  .service .arrow-go{display:none}
+}
+@media(max-width:480px){
+  section{padding:70px 0}
+  .bento{grid-template-columns:1fr}
+  .bento .cell.span2{grid-column:span 1}
+  .service,.vcard{padding:26px}
+  .hero-stats{flex-direction:row;gap:20px}
+  .hero-stats .stat .cap{font-size:11px}
+}
+
+/* ============ REDUCED MOTION ============ */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader"><div class="mono">Д</div></div>
+
+<!-- BACKGROUND -->
+<div class="bg-layer"></div>
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="noise"></div>
+
+<!-- SCROLL PROGRESS -->
+<div class="progress" id="progress"></div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cDot"></div>
+<div class="cursor-ring" id="cRing"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="container inner">
+    <a href="#" class="logo" data-hover><span class="mark">Д</span> Данил</a>
+    <nav class="nav-links" aria-label="Главная навигация">
+      <a href="#about" data-hover>Обо мне</a>
+      <a href="#services" data-hover>Услуги</a>
+      <a href="#advantages" data-hover>Преимущества</a>
+      <a href="#faq" data-hover>FAQ</a>
+    </nav>
+    <a class="nav-cta" href="https://t.me/dnl105" target="_blank" rel="noopener" data-hover aria-label="Связаться в Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      Связаться
+    </a>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
+  <a href="#about" data-close>Обо мне</a>
+  <a href="#services" data-close>Услуги</a>
+  <a href="#advantages" data-close>Преимущества</a>
+  <a href="#faq" data-close>FAQ</a>
+  <a href="https://t.me/dnl105" target="_blank" rel="noopener" class="btn btn-accent" data-close>Связаться в Telegram →</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="container">
+    <div class="label reveal"><span class="dot green"></span> Доступен для консультаций</div>
+    <h1 class="reveal">Заместитель глав-менеджера Альфа-Банка и <span class="grad-text">консультант по банковским продуктам</span></h1>
+    <p class="sub reveal">Меня зовут Данил, мне 24 года. Помогаю подобрать и оформить банковские продукты, консультирую по финансовым решениям и сопровождаю клиентов на всех этапах.</p>
+    <div class="hero-cta reveal">
+      <a href="https://t.me/dnl105" target="_blank" rel="noopener" class="btn btn-primary" data-hover data-magnetic>Связаться в Telegram
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#services" class="btn btn-ghost" data-hover data-magnetic>Смотреть услуги</a>
+    </div>
+    <div class="hero-stats reveal">
+      <div class="stat"><div class="num">5+</div><div class="cap">лет опыта</div></div>
+      <div class="stat"><div class="num">500+</div><div class="cap">клиентов</div></div>
+      <div class="stat"><div class="num">24/7</div><div class="cap">поддержка</div></div>
+    </div>
+  </div>
+  <div class="scroll-ind" aria-hidden="true"><div class="arrow"></div>Прокрутите</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="label reveal"><span class="dot"></span> ОБО МНЕ</div>
+        <h2 class="reveal" style="font-size:clamp(30px,4vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:18px 0 8px">Финансовые решения без лишних сложностей</h2>
+        <p class="lead reveal">Разбираюсь в банковских продуктах изнутри и превращаю сложное в понятное.</p>
+        <p class="reveal">Многолетний опыт в финансовой сфере даёт глубокое понимание того, как устроены банковские продукты и на что действительно стоит обращать внимание.</p>
+        <p class="reveal">Подбираю решения индивидуально под задачи клиента, а не по принципу «продажа ради продажи». Важен именно ваш результат.</p>
+        <p class="reveal">Обеспечиваю полное сопровождение: от первой консультации до оформления — и остаюсь на связи после.</p>
+      </div>
+      <div class="glass vcard reveal" data-hover>
+        <div class="avatar"><span>Д</span></div>
+        <h3>Данил
+          <svg class="verify" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.4 1.8-1 2.8 1 2.8-2.4 1.8-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.2 15.5l1-2.8-1-2.8 2.4-1.8 1-2.8 3-.1z" opacity=".25"/><path d="M9.5 12.5l1.8 1.8 3.7-3.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </h3>
+        <div class="role">Консультант по банковским продуктам</div>
+        <div class="divider"></div>
+        <div class="mini">
+          <div><div class="n">5+</div><div class="l">лет</div></div>
+          <div><div class="n">500+</div><div class="l">клиентов</div></div>
+          <div><div class="n">24/7</div><div class="l">на связи</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label"><span class="dot"></span> УСЛУГИ</div>
+      <h2>Что я делаю<br>и сколько это стоит</h2>
+    </div>
+    <div class="services-grid">
+      <!-- card 1 -->
+      <article class="glass service reveal" data-hover>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <h3>Дебетовые карты</h3>
+        <div class="pill">от 2 000 до 5 000 ₽</div>
+        <ul>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Подбор подходящей карты</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Персональная консультация</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Помощь с оформлением</li>
+        </ul>
+        <div class="arrow-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </article>
+      <!-- card 2 -->
+      <article class="glass service reveal" data-hover>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div>
+        <h3>Регистрация ИП</h3>
+        <div class="pill">от 8 000 до 19 000 ₽</div>
+        <ul>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Консультация по налогообложению</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Полное сопровождение регистрации</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Ответы на все вопросы</li>
+        </ul>
+        <div class="arrow-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </article>
+      <!-- card 3 -->
+      <article class="glass service reveal" data-hover>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><circle cx="8" cy="15" r="1.5"/></svg></div>
+        <h3>Расчётный счёт (РКО)</h3>
+        <div class="pill">от 4 000 до 9 500 ₽</div>
+        <ul>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Подбор оптимального тарифа</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Помощь с оформлением</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Сопровождение подключения</li>
+        </ul>
+        <div class="arrow-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </article>
+      <!-- card 4 -->
+      <article class="glass service reveal" data-hover>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.09 6.26L20.5 8.5l-5 3.9L17.5 19 12 15.5 6.5 19l2-6.6-5-3.9 6.41-.24z"/></svg></div>
+        <h3>Вознаграждение за участие в исследованиях качества сервиса</h3>
+        <div class="pill">индивидуально</div>
+        <p class="note">В некоторых проектах проводится оплачиваемый сбор обратной связи о банковских продуктах. Если в настоящий момент есть доступные программы, размер вознаграждения и условия участия отображаются отдельно для каждой программы.</p>
+        <div class="badge-top"><span class="badge-live"><span class="dot"></span> Актуально</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section id="advantages">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label"><span class="dot"></span> ПРЕИМУЩЕСТВА</div>
+      <h2>Почему со мной удобно</h2>
+    </div>
+    <div class="bento">
+      <div class="glass cell span2 reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <h4>Быстрая консультация</h4>
+        <p>Отвечаю оперативно и сразу перехожу к сути вашей задачи — без долгих ожиданий.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg></div>
+        <h4>Индивидуальный подбор</h4>
+        <p>Решение под вашу ситуацию.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h4>Понятное сопровождение</h4>
+        <p>Провожу через каждый шаг.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg></div>
+        <h4>Современный подход</h4>
+        <p>Актуальные продукты и инструменты.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h4>Онлайн-взаимодействие</h4>
+        <p>Всё решается дистанционно.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>Поддержка клиентов</h4>
+        <p>Остаюсь на связи и после.</p>
+      </div>
+      <div class="glass cell reveal" data-hover>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></div>
+        <h4>Пятилетний опыт в финансах</h4>
+        <p>Практика, проверенная временем.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="sec-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      <div class="label"><span class="dot"></span> ВОПРОСЫ</div>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item reveal">
+        <button class="faq-q" data-hover aria-expanded="false">Как проходит консультация?<span class="faq-icon"></span></button>
+        <div class="faq-a"><p>Связываемся в Telegram, обсуждаем задачу, подбираю оптимальное решение и помогаю на всех этапах оформления.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" data-hover aria-expanded="false">Какие услуги оказываются?<span class="faq-icon"></span></button>
+        <div class="faq-a"><p>Подбор и оформление дебетовых карт, регистрация ИП, открытие расчётных счетов, консультации по банковским продуктам.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" data-hover aria-expanded="false">Сколько времени занимает оформление?<span class="faq-icon"></span></button>
+        <div class="faq-a"><p>От 15 минут для дебетовой карты до 3–5 дней для регистрации ИП и открытия РКО.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" data-hover aria-expanded="false">Как связаться?<span class="faq-icon"></span></button>
+        <div class="faq-a"><p>Напишите в Telegram <span class="copyable" data-copy="@dnl105">@dnl105</span> — отвечу в течение часа в рабочее время.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" data-hover aria-expanded="false">Есть ли сопровождение после оформления?<span class="faq-icon"></span></button>
+        <div class="faq-a"><p>Да, остаюсь на связи и помогаю с любыми вопросами по оформленным продуктам.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="contact">
+  <div class="container">
+    <div class="glass final-card reveal" data-hover>
+      <div class="label"><span class="dot"></span> КОНТАКТЫ</div>
+      <h2 style="margin-top:18px">Готовы начать?</h2>
+      <p>Ответьте на пару вопросов — и я подберу оптимальное решение под вашу задачу.</p>
+      <span class="tg-wrap">
+        <a href="https://t.me/dnl105" target="_blank" rel="noopener" class="btn btn-accent pulse btn-big" data-hover data-magnetic>Получить консультацию
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <span class="glass tg-preview" role="tooltip">
+          <span class="row">
+            <span class="pfp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></span>
+            <span><span class="nm">Данил</span><br><span class="un">@dnl105</span></span>
+          </span>
+        </span>
+      </span>
+      <div class="fine">Ответ в течение часа · Бесплатная первичная консультация</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container inner">
+    <div class="cr">© 2026 Данил · Финансовый консультант</div>
+    <a class="tg" href="https://t.me/dnl105" target="_blank" rel="noopener" data-hover>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      @dnl105
+    </a>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg">Скопировано</span></div>
+
+<script>
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* LOADER */
+  window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hide'),700)});
+
+  /* SCROLL PROGRESS + NAV + PARALLAX */
+  const nav=document.getElementById('nav'), progress=document.getElementById('progress');
+  const heroInner=document.querySelector('.hero .container');
+  function onScroll(){
+    const y=window.scrollY;
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    progress.style.width=(y/h*100)+'%';
+    nav.classList.toggle('scrolled',y>30);
+    if(!reduce && heroInner && y<window.innerHeight){
+      heroInner.style.transform=`translateY(${y*.15}px)`;
+      heroInner.style.opacity=1-y/window.innerHeight*.9;
+    }
+  }
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!ticking){requestAnimationFrame(()=>{onScroll();ticking=false});ticking=true}
+  },{passive:true});
+  onScroll();
+
+  /* REVEAL */
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('.services-grid, .bento, .hero .container, .faq').forEach(g=>{
+    [...g.querySelectorAll('.reveal')].forEach((el,i)=>{el.style.transitionDelay=(i*90)+'ms'});
+  });
+
+  /* CUSTOM CURSOR */
+  if(!reduce && window.matchMedia('(pointer:fine)').matches){
+    const dot=document.getElementById('cDot'), ring=document.getElementById('cRing');
+    let mx=0,my=0,rx=0,ry=0;
+    window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`});
+    (function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
+    document.querySelectorAll('[data-hover]').forEach(el=>{
+      el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+      el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+    });
+  }
+
+  /* MAGNETIC BUTTONS */
+  if(!reduce){
+    document.querySelectorAll('[data-magnetic]').forEach(btn=>{
+      btn.addEventListener('mousemove',e=>{
+        const r=btn.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
+        btn.style.transform=`translate(${x*.25}px,${y*.35}px)`;
+      });
+      btn.addEventListener('mouseleave',()=>btn.style.transform='');
+    });
+  }
+
+  /* BURGER */
+  const burger=document.getElementById('burger'), mm=document.getElementById('mobileMenu');
+  burger.addEventListener('click',()=>{
+    const open=burger.classList.toggle('open');mm.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+    document.body.style.overflow=open?'hidden':'';
+  });
+  mm.querySelectorAll('[data-close]').forEach(a=>a.addEventListener('click',()=>{
+    burger.classList.remove('open');mm.classList.remove('open');document.body.style.overflow='';burger.setAttribute('aria-expanded','false');
+  }));
+
+  /* FAQ */
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    const q=item.querySelector('.faq-q'), a=item.querySelector('.faq-a');
+    q.addEventListener('click',()=>{
+      const open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight=null;o.querySelector('.faq-q').setAttribute('aria-expanded','false')});
+      if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';q.setAttribute('aria-expanded','true')}
+    });
+  });
+
+  /* COPY TO CLIPBOARD */
+  const toast=document.getElementById('toast'), toastMsg=document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg){toastMsg.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2200)}
+  document.querySelectorAll('[data-copy]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const t=el.getAttribute('data-copy');
+      navigator.clipboard?.writeText(t).then(()=>showToast('Скопировано: '+t)).catch(()=>showToast('Не удалось скопировать'));
+    });
+  });
+
+  /* PARTICLES */
+  if(!reduce){
+    const c=document.getElementById('particles'), ctx=c.getContext('2d');
+    let w,h,parts,running=true;
+    function resize(){const hero=document.getElementById('hero');w=c.width=hero.offsetWidth;h=c.height=hero.offsetHeight;
+      parts=Array.from({length:Math.min(70,Math.floor(w/22))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.6+.4,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,o:Math.random()*.5+.1}));
+    }
+    resize();window.addEventListener('resize',resize);
+    new IntersectionObserver(([e])=>{running=e.isIntersecting}).observe(document.getElementById('hero'));
+    (function draw(){
+      if(running){
+        ctx.clearRect(0,0,w,h);
+        parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;
+          if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+          ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle=`rgba(255,138,101,${p.o})`;ctx.fill();
+        });
+      }
+      requestAnimationFrame(draw);
+    })();
+  }
+})();
+</script>
+</body>
+</html>
